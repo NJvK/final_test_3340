@@ -32,26 +32,26 @@ lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
 );
 
 // lateral motion controller
-lemlib::ControllerSettings linearController(10, // proportional gain (kP)
+lemlib::ControllerSettings linearController(4.5, // proportional gain (kP)
                                             0, // integral gain (kI)
-                                            3, // derivative gain (kD)
-                                            3, // anti windup
+                                            4, // derivative gain (kD)
+                                            0, // anti windup
                                             1, // small error range, in inches
-                                            100, // small error range timeout, in milliseconds
-                                            3, // large error range, in inches
-                                            500, // large error range timeout, in milliseconds
-                                            20 // maximum acceleration (slew)
+                                            75, // small error range timeout, in milliseconds
+                                            2, // large error range, in inches
+                                            150, // large error range timeout, in milliseconds
+                                            0 // maximum acceleration (slew)
 );
 
 // angular motion controller
-lemlib::ControllerSettings angularController(2, // proportional gain (kP)
+lemlib::ControllerSettings angularController(4, // proportional gain (kP)
                                              0, // integral gain (kI)
-                                             10, // derivative gain (kD)
-                                             3, // anti windup
+                                             20, // derivative gain (kD)
+                                             0, // anti windup
                                              1, // small error range, in degrees
-                                             100, // small error range timeout, in milliseconds
-                                             3, // large error range, in degrees
-                                             500, // large error range timeout, in milliseconds
+                                             50, // small error range timeout, in milliseconds
+                                             2, // large error range, in degrees
+                                             200, // large error range timeout, in milliseconds
                                              0 // maximum acceleration (slew)
 );
 
@@ -83,7 +83,7 @@ pros::Motor Scoring(-3);
 
 pros::ADIDigitalOut descore('F');
 pros::ADIDigitalOut matchload('G');
-pros::ADIDigitalOut middle('A');
+pros::ADIDigitalOut middle('H');
 
 bool descorestate = false;
 bool matchloadstate = false;
@@ -158,9 +158,55 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
  */
 
 
-void autonomous() {
-   
+void redRight() {
+    chassis.setPose(0,0,0);
+    chassis.moveToPoint(0, 14, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.swingToHeading(25,lemlib::DriveSide::RIGHT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    Intake.move_velocity(200);
+    // Scoring.move_velocity(-50);
+    chassis.moveToPoint(8, 27, 1500, {.maxSpeed = 50});
+    chassis.waitUntil(7);
+    toggle_matchload();
+    chassis.turnToHeading(-47, 1000);
+    toggle_matchload();
+    chassis.moveToPoint(-4, 33.9, 1000, {.maxSpeed = 70});
+    chassis.waitUntil(7);
+    Intake.move_velocity(-200);
+    Scoring.move_velocity(-50);
+    chassis.waitUntilDone();
+    pros::delay(1000);
+    chassis.moveToPoint(1,27,1500, {.forwards = false});
+    chassis.waitUntil(5);
+    Intake.move_velocity(200);
+    chassis.turnToHeading(190, 1000, {.minSpeed = 1, .earlyExitRange = 5});
+    chassis.moveToPoint(4.5, 0, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.turnToHeading(-270, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.moveToPoint(30.5, 3, 1500);
+    chassis.turnToHeading(-180, 1000);
+    toggle_matchload();
+    chassis.moveToPoint(30.5, -6, 1000, {.minSpeed = 70});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(30.5, -1, 1000, {.forwards = false, .maxSpeed = 70});
+    chassis.waitUntilDone();
+    pros::delay(200);
+    chassis.moveToPoint(30.5, -4, 1000);
+    chassis.waitUntilDone();
+    pros::delay(200);
+    chassis.moveToPoint(30.5, -1, 1000, {.forwards = false, .maxSpeed = 70});
+
+    chassis.moveToPoint(30.8, 20, 1500, {.forwards = false, .maxSpeed = 90});
+    chassis.waitUntil(15);
+    Scoring.move_velocity(200);
 }
+void redLeft() {
+
+}
+
+void autonomous() {
+    redRight();
+    // redLeft();
+}
+
 
 /**
  * Runs in driver control
@@ -194,21 +240,17 @@ void opcontrol() {
 
         // Control Intake using shoulder buttons (L1/L2)
         
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-        {
-			Intake.move_velocity(-200);
-			Scoring.move_velocity(-50);
-        }
-        else
-        {
-			Intake.move_velocity(0);
-			Scoring.move_velocity(0);
-        }
+    
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
         {
 			Intake.move_velocity(200);
 	
+        }
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+        {
+			Intake.move_velocity(-200);
+			Scoring.move_velocity(-50);
         }
         else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
         {
