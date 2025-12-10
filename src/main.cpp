@@ -199,12 +199,21 @@ void redRight() {
     Scoring.move_velocity(200);
 }
 void redLeft() {
+    
+}
+void soloWinPoint() {
 
 }
-
+void moveForward(){
+    chassis.setPose(0, 0, 0);
+    pros::delay(4000);
+    chassis.moveToPoint(0, 10, 1000);
+}
 void autonomous() {
-    redRight();
+    // redRight();
     // redLeft();
+    // soloWinPoint();
+    // moveForward();
 }
 
 
