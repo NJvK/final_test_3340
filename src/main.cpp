@@ -199,7 +199,16 @@ void redRight() {
     Scoring.move_velocity(200);
 }
 void redLeft() {
-    chassis.setPose(0, 0, 0);
+    chassis.setPose(0,0,0);
+    chassis.moveToPoint(0, 14, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.swingToHeading(25,lemlib::DriveSide::LEFT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    Intake.move_velocity(200);
+    // Scoring.move_velocity(-50);
+    chassis.moveToPoint(8, 27, 1500, {.maxSpeed = 50});
+    chassis.waitUntil(7);
+    toggle_matchload();
+    chassis.turnToHeading(47, 1000);
+    
 }
 void soloWinPoint() {
 
