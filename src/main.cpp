@@ -1,5 +1,6 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
+#include <algorithm>
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -103,6 +104,31 @@ void toggle_middle(){
     middlestate = !middlestate;
     middle.set_value(middlestate);
 }
+// direction: "x" or "y"
+// distance: positive or negative inches
+// timeout: ms
+// settings: lemlib::MoveToPointSettings (same struct used in moveToPoint)
+void moveDistance(lemlib::Chassis& chassis,
+    double distance,
+    int timeout,
+    lemlib::MoveToPointParams params = {}) {
+
+    lemlib::Pose pose = chassis.getPose();
+
+    double headingRad = pose.theta * M_PI / 180.0;
+
+    // forward = +X (default lemlib behavior when not using odom wheels)
+    double dx = distance * cos(headingRad);
+    double dy = distance * sin(headingRad);
+
+    double targetX = pose.x + dx;
+    double targetY = pose.y + dy;   
+
+    chassis.moveToPoint(targetX, targetY, timeout, params);
+}
+
+
+
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -199,16 +225,43 @@ void redRight() {
     Scoring.move_velocity(200);
 }
 void redLeft() {
+    // moveDistance(chassis, 10, 1000);
+
+
+
     chassis.setPose(0,0,0);
     chassis.moveToPoint(0, 14, 1000, {.minSpeed = 1, .earlyExitRange = 1});
-    chassis.swingToHeading(25,lemlib::DriveSide::LEFT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.swingToHeading(-30,lemlib::DriveSide::LEFT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
     Intake.move_velocity(200);
     // Scoring.move_velocity(-50);
-    chassis.moveToPoint(8, 27, 1500, {.maxSpeed = 50});
-    chassis.waitUntil(7);
-    toggle_matchload();
-    chassis.turnToHeading(47, 1000);
+    chassis.moveToPoint(-5, 22.5, 1000, {.maxSpeed = 50});
+
+
+    //-9, 29.5 
     
+    chassis.moveToPoint(-9, 29.5, 1000, {.maxSpeed = 50});
+
+    
+    // chassis.turnToHeading(-29.5, 1000);
+    chassis.turnToHeading(-131, 1000);
+    chassis.waitUntilDone();
+
+    
+    chassis.moveToPoint(2, 31, 1000, {.forwards=false});
+    Scoring.move_velocity(100);
+    
+    // chassis.waitUntilDone();
+
+    // chassis.moveToPoint(-3, 40, 1000, {.maxSpeed = 50});
+
+
+    
+    // -10, 29 
+
+    
+    // toggle_matchload();
+    // chassis.turnToHeading(47, 1000);
+
 }
 void soloWinPoint() {
 
@@ -223,7 +276,7 @@ void skills() {
 }
 void autonomous() {
     // redRight();
-    // redLeft();
+     redLeft();
     // soloWinPoint();
     // moveForward();
 }
@@ -237,6 +290,7 @@ void opcontrol() {
     // controller
     // loop to continuously update motors
     while (true) {
+        return;
         // get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
