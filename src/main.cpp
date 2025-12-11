@@ -199,15 +199,18 @@ void redRight() {
     Scoring.move_velocity(200);
 }
 void redLeft() {
-    
+    chassis.setPose(0, 0, 0);
 }
 void soloWinPoint() {
 
 }
-void moveForward(){
+void moveForward() {
     chassis.setPose(0, 0, 0);
     pros::delay(4000);
     chassis.moveToPoint(0, 10, 1000);
+}
+void skills() {
+
 }
 void autonomous() {
     // redRight();
