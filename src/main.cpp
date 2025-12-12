@@ -183,6 +183,10 @@ ASSET(example_txt); // '.' replaced with "_" to make c++ happy
  * This is an example autonomous routine which demonstrates a lot of the features LemLib has to offer
  */
 
+ void exitcondition(lemlib::Pose target, double exitDist){
+    chassis.waitUntil(fabs(chassis.getPose().distance(target)) - exitDist);
+    chassis.cancelMotion();
+}
 
 void redRight() {
     chassis.setPose(0,0,0);
@@ -227,44 +231,106 @@ void redRight() {
 void redLeft() {
     // moveDistance(chassis, 10, 1000);
 
-
-
     chassis.setPose(0,0,0);
-    chassis.moveToPoint(0, 14, 1000, {.minSpeed = 1, .earlyExitRange = 1});
-    chassis.swingToHeading(-30,lemlib::DriveSide::LEFT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.moveToPoint(0, 13, 1000, {.minSpeed = 1, .earlyExitRange = 1});
+    chassis.swingToHeading(-32,lemlib::DriveSide::LEFT, 1000, {.minSpeed = 1, .earlyExitRange = 1});
     Intake.move_velocity(200);
     // Scoring.move_velocity(-50);
-    chassis.moveToPoint(-5, 22.5, 1000, {.maxSpeed = 50});
+    chassis.moveToPoint(-6, 25, 1500, {.maxSpeed = 50});
+    chassis.waitUntil(7);
+    toggle_matchload();
+    chassis.turnToHeading(-135, 1000);
+    toggle_matchload();
+    Intake.move_velocity((0));
+    toggle_middle();
+    chassis.moveToPoint(6, 32, 1500, {.forwards = false, .maxSpeed = 90});
+    chassis.waitUntil(7);
 
-
-    //-9, 29.5 
-    
-    chassis.moveToPoint(-9, 29.5, 1000, {.maxSpeed = 50});
-
-    
-    // chassis.turnToHeading(-29.5, 1000);
-    chassis.turnToHeading(-131, 1000);
+    Intake.move_velocity(10000);
+    Scoring.move_velocity(50);
     chassis.waitUntilDone();
-
-    
-    chassis.moveToPoint(2, 31, 1000, {.forwards=false});
-    Scoring.move_velocity(100);
-    
+    pros::delay(1000);
+    // chassis.moveToPoint(-1,27,1500, {.forwards = false});
+    // chassis.waitUntil(5);
+    // Intake.move_velocity(200);
+    // chassis.turnToHeading(-190, 1000, {.minSpeed = 1, .earlyExitRange = 5});
+    chassis.moveToPoint(-28, 1, 2000);
+    chassis.turnToHeading(-180, 1000);
+    chassis.moveToPoint(-26.5, -9, 1500);
+    // chassis.turnToHeading(180, 1000);
+    toggle_matchload();
+    chassis.waitUntilDone();
+    pros::delay(800);
+    chassis.moveToPoint(-26.5, -3, 1000, {.forwards = false, .maxSpeed = 20});
+    chassis.moveToPoint(-26.5, 15, 1000, {.forwards = false});
+    Scoring.move_velocity(200);
     // chassis.waitUntilDone();
+    // chassis.moveToPoint(-30.5, -1, 1000, {.forwards = false, .maxSpeed = 70});
+    // chassis.waitUntilDone();
+    // pros::delay(200);
+    // chassis.moveToPoint(-30.5, -4, 1000);
+    // chassis.waitUntilDone();
+    // pros::delay(200);
+    // chassis.moveToPoint(-30.5, -1, 1000, {.forwards = false, .maxSpeed = 70});
 
-    // chassis.moveToPoint(-3, 40, 1000, {.maxSpeed = 50});
-
-
-    
-    // -10, 29 
-
-    
-    // toggle_matchload();
-    // chassis.turnToHeading(47, 1000);
+    // chassis.moveToPoint(-30.8, 20, 1500, {.forwards = false, .maxSpeed = 90});
+    // chassis.waitUntil(15);
+    // Scoring.move_velocity(200);
 
 }
-void soloWinPoint() {
+void soloWinPointright() {
+  chassis.setPose(-47.000, -8.000, 180.0);
 
+  //moving to matchload
+  chassis.moveToPoint(chassis.getPose().x, -43.00, 1000, {.maxSpeed =100, .minSpeed = 50});
+  pros::delay(700);
+
+  chassis.waitUntilDone();
+  //turning to matchload
+  chassis.turnToHeading(270, 650, {.minSpeed = 10, .earlyExitRange = 50});
+  chassis.waitUntilDone();;
+  //smashhhh
+  chassis.moveToPoint(-70, -43.3, 900, { .maxSpeed = 90, .minSpeed = 60});
+  chassis.waitUntilDone();
+  pros::delay(300);
+
+  //moving to score
+  chassis.moveToPose(-19.000, -47.000, 270.0, 1000, {.forwards = false, .lead = 0.1,  .maxSpeed = 120, .minSpeed = 80});
+  exitcondition({-23.000, -47.000, 270.0}, 1);
+  chassis.turnToHeading(270, 200);
+  pros::delay(1200);
+
+  //6 balls route
+  //getting 3
+  chassis.moveToPose(-18.000, -19.000, 52.0, 1300, {.lead = 0.1, .maxSpeed = 90, .minSpeed = 50});
+  chassis.waitUntil(24);
+  exitcondition({-18.000, -19.000, 52.0}, 2);
+  
+  //getting other 3
+  chassis.moveToPose(chassis.getPose().x, 28.500, 358.0, 1500, {.maxSpeed = 90, .minSpeed = 50});
+  chassis.waitUntil(15);
+  chassis.waitUntil(42);
+  chassis.waitUntilDone();
+
+  //midgoal
+  chassis.turnToHeading(315, 600);
+  chassis.moveToPose(-3.272, 2.344, 315.0, 1200, {.forwards = false,.lead = 0.1, .minSpeed = 85});
+  pros::delay(200);
+  chassis.waitUntilDone();
+  chassis.turnToHeading(315, 200);
+  pros::delay(600);
+
+  //matchload
+  chassis.moveToPoint(-43.000, 45.000, 1400, {.minSpeed = 80});
+  pros::delay(200);
+  chassis.moveToPose(-70.000, 45.000, 270.0, 1300, {.lead = 0.1,.maxSpeed = 80, .minSpeed = 50,});
+  chassis.waitUntilDone();
+  chassis.turnToHeading(270, 309);
+
+  //scoring
+  chassis.moveToPose(-19.000, 46.800, 270.0, 1000, {.forwards = false, .lead = 0.4, .maxSpeed = 120, .minSpeed = 70});
+  exitcondition({-22.000, 47.800, 270.0}, 1);
+  
 }
 void moveForward() {
     chassis.setPose(0, 0, 0);
@@ -276,8 +342,8 @@ void skills() {
 }
 void autonomous() {
     // redRight();
-     redLeft();
-    // soloWinPoint();
+    redLeft();
+    // soloWinPointright();
     // moveForward();
 }
 
