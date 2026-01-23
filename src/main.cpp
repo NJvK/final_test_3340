@@ -302,13 +302,13 @@ void ball7_wing_right() {
 
 void ball7_right() {
     chassis.setPose(14, -50, 0);
-    chassis.moveToPose(19.5, -32, 33.0, 1300, {.lead = 0.13, .maxSpeed = 80, .minSpeed = 50});
+    chassis.moveToPose(19.5, -36, 35.0, 1300, {.lead = 0.13, .maxSpeed = 80, .minSpeed = 50});
     set_intakef(12000);
     chassis.waitUntil(14);
     toggle_matchload();
     exit_condition({22.5, -32, -33}, 3);
     // 37, -58
-    // 37, -36
+    // 37, -36 
     chassis.moveToPose(32.5, -59, 180, 1400, {.lead = .3, .maxSpeed = 80, .minSpeed = 30});
     exit_condition({32, -58, 130}, 1);
     chassis.moveToPose(38.5, -80, 180.0, 1350, {.lead = 0.1, .maxSpeed = 50, .minSpeed = 30});
@@ -383,7 +383,7 @@ void left_quals() {
     // chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 }
 
-    void skills_auto() {
+void skills_auto() {
         //-15, -50
         chassis.setPose(-15, -50, 0);
         chassis.moveToPoint(-17.3, -37, 1000, {.maxSpeed = 90, .earlyExitRange = 2});
@@ -410,62 +410,62 @@ void left_quals() {
         pros::delay(500);
         chassis.moveToPoint(-42, -52, 1000, {.forwards = false});
         chassis.waitUntilDone();
-    }
-    void inch(){
-        chassis.setPose(0,0, 0);
-        chassis.moveToPose(0, 5, 0, 1000);
-    }
+}
+void inch(){
+    chassis.setPose(0,0, 0);
+    chassis.moveToPose(0, 5, 0, 1000);
+}
 
-    void autonomous() {
-        //left_quals();
-        //ball7_left();
-        // solo_awp_right();
-        // redRight();
-        ball7_right();
-        // inch();
+void autonomous() {
+    //left_quals();
+    //ball7_left();
+    // solo_awp_right();
+    // redRight();
+    ball7_right();
+    // inch();
 
-        // solo_awp_right();
-        // moveForward();
-        // left_quals();
-        // ball7_wing_left();
-        // skills_auto();
-    }
+    // solo_awp_right();
+    // moveForward();
+    // left_quals();
+    // ball7_wing_left();
+    // skills_auto();
+}
 
-    /**
-     * Runs in driver control
-     */
+/**
+    * Runs in driver control
+    */
 
-    void opcontrol() {
-        // controller
-        // loop to continuously update motors
-        chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-        while (true) {
-            // get joystick positions
-            int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-            int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-            // move the chassis with curvature drive
-            chassis.arcade(leftY, rightX);
+void opcontrol() {
+    // controller
+    // loop to continuously update motors
+    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+    while (true) {
+        // get joystick positions
+        int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+        // move the chassis with curvature drive
+        chassis.arcade(leftY, 0.9*rightX);
 
-            // buttons for controller
+        // buttons for controller
 
-            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) { toggle_descore(); }
-            if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { toggle_matchload(); }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) { toggle_descore(); }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { toggle_matchload(); }
 
-            // Control Intake using shoulder buttons (L1/L2)
+        // Control Intake using shoulder buttons (L1/L2)
 
-            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-                set_intakef(12000);
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            set_intakef(12000);
 
-            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-                intakef.move_velocity(-200);
-                intakeb.move_velocity(-50);
-            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-                set_both(12000);
-            } else {
-                set_both(0);
-            }
-
-            // delay to save resources
-            pros::delay(10);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            intakef.move_velocity(-200);
+            intakeb.move_velocity(-50);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+            set_both(12000);
+        } else {
+            set_both(0);
         }
+
+        // delay to save resources
+        pros::delay(10);
     }
+}
