@@ -1,6 +1,8 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include <algorithm>
+#include "distance.cpp"
+#include "pros/distance_util.hpp"
 
 // controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -92,6 +94,7 @@ void set_both(int32_t voltage) {
     intakef.move_voltage(voltage);
     intakeb.move_voltage(voltage);
 }
+DistanceUtil distanceUtil;
 
 void set_intakeb(int32_t voltage) { intakeb.move_voltage(voltage); }
 
@@ -415,14 +418,19 @@ void inch(){
     chassis.setPose(0,0, 0);
     chassis.moveToPose(0, 5, 0, 1000);
 }
+void testDistance(){
+    distanceUtil.resetcoord(3, 0, chassis);
 
+    chassis.moveToPoint(24, 24, 2000);
+}
 void autonomous() {
     //left_quals();
     //ball7_left();
     // solo_awp_right();
     // redRight();
-    ball7_right();
+    // ball7_right();
     // inch();
+    testDistance();
 
     // solo_awp_right();
     // moveForward();

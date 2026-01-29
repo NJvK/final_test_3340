@@ -21,9 +21,7 @@
 
 #include <cstdint>
 #include <iostream>
-
-#include "pros/device.hpp"
-#include "pros/distance.h"
+#include "ports.hpp"
 
 namespace pros {
 inline namespace v5 {
