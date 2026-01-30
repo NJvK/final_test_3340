@@ -570,9 +570,9 @@ void skills_auto() {
     chassis.moveToPose(-5.5, -15.5, -135, 4000, {.forwards = false, .maxSpeed = 90, .minSpeed = 75});
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
     chassis.waitUntil(13);
-    set_intakef(8000);
+    set_intakef(10000);
     set_intakeb(0);
-    pros::delay(1200);
+    pros::delay(1700);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     chassis.moveToPoint(-43, -53, 2000, {.maxSpeed = 100, .minSpeed = 10, .earlyExitRange = 1});
     set_intakeb(12000);
@@ -582,7 +582,7 @@ void skills_auto() {
     set_intakef(12000);
     set_intakeb(0);
     pros::delay(600);
-    chassis.moveToPose(-42.5, -52, 180, 1000, {.forwards = false, .maxSpeed = 60, .minSpeed = 30});
+    chassis.moveToPose(-42.5, -50, 180, 1000, {.forwards = false, .maxSpeed = 60});
     chassis.waitUntilDone();
     pros::delay(100);
     resetcoord(3, 180);
@@ -594,36 +594,34 @@ void skills_auto() {
     set_both(0);
     chassis.moveToPoint(-56, 21, 3500, {.forwards = false, .maxSpeed = 110, .minSpeed = 30, .earlyExitRange = 3});
     chassis.turnToHeading(-90, 1000, {.minSpeed = 10, .earlyExitRange = 2});
-    chassis.moveToPoint(-45, 18, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.moveToPoint(-44.5, 18, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
     chassis.turnToHeading(0, 1000, {.minSpeed = 10, .earlyExitRange = 2});
-    chassis.moveToPoint(-45, 1.5, 1700, {.forwards = false, .maxSpeed = 110});
-    chassis.waitUntil(5);
-    set_both(-12000);
-    pros::delay(50);
+    chassis.moveToPoint(-44.5, 1.5, 1700, {.forwards = false, .maxSpeed = 110});
+    chassis.waitUntil(6);
     set_both(12000);
-    pros::delay(2000);
-    chassis.moveToPoint(-45, 40, 3000, {.maxSpeed = 65});
+    pros::delay(2500);
+    chassis.moveToPoint(-44.5, 40, 3000, {.maxSpeed = 55});
     toggle_matchload();
     set_intakeb(0);
     chassis.waitUntilDone();
     pros::delay(100);
-    chassis.moveToPoint(-45, 5, 2000, {.forwards = false, .maxSpeed = 100});
+    chassis.moveToPoint(-44.5, 5, 2000, {.forwards = false, .maxSpeed = 100});
     chassis.waitUntil(21);
     set_both(12000);
     toggle_matchload();
     pros::delay(1000);
     set_intakeb(8000);
     pros::delay(500);
-    chassis.moveToPose(-45, 20, 0, 1000, {.maxSpeed = 100, .minSpeed = 10});
+    chassis.moveToPose(-44.5, 20, 0, 1000, {.maxSpeed = 100, .minSpeed = 10});
     chassis.waitUntilDone();
     resetcoord(2, 0);
     pros::delay(50);
     // //-47, 41
 
-    chassis.moveToPose(-20, 59, 90, 1500, {.lead = .27, .maxSpeed = 100});
+    chassis.moveToPose(-20, 60, 90, 1500, {.lead = .27, .maxSpeed = 100});
     chassis.waitUntilDone();
     toggle_matchload();
-    chassis.moveToPose(28, 59, 90, 6000, {.maxSpeed = 70});
+    chassis.moveToPose(28, 60, 90, 6000, {.maxSpeed = 70});
     chassis.waitUntil(13);
     toggle_matchload();
     set_intakeb(0);
@@ -641,7 +639,7 @@ void skills_auto() {
     chassis.waitUntil(6);
     set_intakef(0);
     chassis.turnToHeading(45, 1000);
-    chassis.moveToPose(10, 13.5, 45, 2300,  {.forwards = false, .maxSpeed = 50, .minSpeed = 45});
+    chassis.moveToPose(10, 13.5, 45, 1400,  {.forwards = false, .maxSpeed = 80, .minSpeed = 60});
     chassis.waitUntil(8);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     set_both(-9000);
@@ -655,7 +653,7 @@ void skills_auto() {
     set_both(12000);
     chassis.turnToHeading(0, 1000, {.minSpeed = 10, .earlyExitRange = 2});
     toggle_matchload();
-    chassis.moveToPoint(45.5, 67, 3200, {.maxSpeed = 60, .minSpeed = 20});
+    chassis.moveToPoint(45.5, 67, 3200, {.maxSpeed = 50, .minSpeed = 50});
     set_intakef(12000);
     set_intakeb(0);
     chassis.moveToPoint(55, 44, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 3});
@@ -663,7 +661,7 @@ void skills_auto() {
     toggle_matchload();
     chassis.turnToHeading(0, 1000, {.minSpeed = 30, .earlyExitRange = 5});
     set_both(0);
-    chassis.moveToPoint(55, -18, 4000, {.forwards = false, .maxSpeed = 90, .minSpeed = 30, .earlyExitRange =1 });
+    chassis.moveToPoint(55, -20, 4000, {.forwards = false, .maxSpeed = 90, .minSpeed = 30, .earlyExitRange =1 });
     chassis.turnToHeading(90, 1500);
     chassis.waitUntilDone();
     pros::delay(50);
@@ -671,9 +669,9 @@ void skills_auto() {
     pros::delay(50);
 
 
-    chassis.moveToPoint(53, -36, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.moveToPoint(51, -36, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
     chassis.turnToHeading(180, 1000, {.minSpeed = 10, .earlyExitRange = 2});
-    chassis.moveToPoint(52.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
+    chassis.moveToPoint(50.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
     chassis.waitUntil(4);
     set_both(12000);
     pros::delay(2000);
@@ -681,14 +679,14 @@ void skills_auto() {
     pros::delay(50);
     toggle_matchload();
     set_intakeb(0);
-    chassis.moveToPoint(52.5, -57, 2500, {.maxSpeed = 55});
+    chassis.moveToPoint(50.5, -57, 2500, {.maxSpeed = 55});
     pros::delay(3000);
-    chassis.moveToPoint(52.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
+    chassis.moveToPoint(50.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
     chassis.waitUntil(20);
     set_both(12000);
     pros::delay(2800);
     toggle_matchload();
-    chassis.moveToPose(52.5,-35, 180, 1000, {.maxSpeed = 70});
+    chassis.moveToPose(50.5,-35, 180, 1000, {.maxSpeed = 70});
     resetcoord(4, 180);
     // chassis.moveToPose(28, -56.5, 270, 2000, {.lead = 0.4, .maxSpeed = 100});
     // chassis.waitUntilDone();
@@ -725,6 +723,7 @@ void opcontrol() {
     // controller
     // loop to continuously update motors
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+    // skills_auto();
     while (true) {
         // get joystick positions
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
