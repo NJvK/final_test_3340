@@ -369,9 +369,10 @@ void right_quals(){
     pros::delay(1800);
     chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+
     chassis.moveToPose(chassis.getPose().x - 10.5, chassis.getPose().y - 10, 220, 1000, {.lead = .1, .maxSpeed = 120, .minSpeed = 30, .earlyExitRange = 2});
    toggle_matchload();
-    chassis.moveToPose(43.7, -22, 180, 2000, {.forwards = false, .maxSpeed = 90, .minSpeed = 80, .earlyExitRange = 1});
+    chassis.moveToPose(43.7, -27, 180, 2000, {.forwards = false, .maxSpeed = 90, .minSpeed = 80, .earlyExitRange = 1});
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
     chassis.waitUntilDone();
     chassis.turnToHeading(-230, 1500, {.maxSpeed = 20});
@@ -625,17 +626,18 @@ void ball4_left(){
 
     chassis.moveToPose(-39.5, -59, 176, 1500, {.lead = .3, .maxSpeed = 110, .minSpeed = 60});
     exit_condition({-40.5, -59, -130}, 1);
-    chassis.moveToPose(-41.5, -38, 175.0, 1150, {.forwards = false, .lead = 0.1,  .maxSpeed = 70, .minSpeed = 50});
+    chassis.moveToPose(-41.5, -38, 180.0, 1150, {.forwards = false, .lead = 0.1,  .maxSpeed = 70, .minSpeed = 50});
     chassis.waitUntil(9);
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
     set_both(12000);
+
     // -------------------------
-    pros::delay(900);
+    pros::delay(1500);
     chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
     chassis.moveToPose(chassis.getPose().x - 10, chassis.getPose().y - 11.5, 200, 1000, {.lead = .1, .maxSpeed = 100, .minSpeed = 1, .earlyExitRange = 2});
     toggle_matchload();
-    chassis.moveToPose(-42, -30, 180, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 50, .earlyExitRange = 2});
+    chassis.moveToPose(-42, -33, 180, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 50, .earlyExitRange = 2});
     chassis.waitUntilDone();
     chassis.turnToHeading(-230, 1000, {.maxSpeed = 20});
     chassis.waitUntil(30);
@@ -796,12 +798,11 @@ void inch(){
 }
 
 void autonomous() {
-
-    // ball4_left(); // NEEDS TUNING
-    // solo_awp_right(); // donnot need tuning for drc DONT TOUCH THIS
+    // only use code above the line
+    // ball4_left(); // This works
     // right_quals();
-
-
+    //----------------------------
+    // solo_awp_right(); // donnot need tuning for drc DONT TOUCH THIS
     // left_quals(); // this works
     // ball7_left();
 
