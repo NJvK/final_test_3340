@@ -8,9 +8,9 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor groups
-pros::MotorGroup leftMotors({-11, 12, -13},
+pros::MotorGroup leftMotors({-4, -3, -14},
                             pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({-14, 15, 16}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup rightMotors({20, 15, 16}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
 // Inertial Sensor on port 10
 pros::Imu imu(1);
@@ -82,7 +82,8 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
 
 pros::Motor intakeb(-19);
-pros::Motor intakef(20);
+pros::Motor intakem(17);
+pros::Motor intakef(-21);
 
 pros::ADIDigitalOut descore('B');
 pros::ADIDigitalOut matchload('A');
@@ -104,6 +105,8 @@ void set_both(int32_t voltage) {
 void set_intakeb(int32_t voltage) { intakeb.move_voltage(voltage); }
 
 void set_intakef(int32_t voltage) { intakef.move_voltage(voltage); }
+
+void set_intakem(int32_t voltage) { intakem.move_voltage(voltage); }
 
 void toggle_matchload() {
     matchload_state = !matchload_state;
@@ -838,13 +841,18 @@ void opcontrol() {
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             set_intakef(12000);
+            set_intakeb(12000);
+            set_intakem(12000);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             intakef.move_velocity(-200);
             intakeb.move_velocity(-200);
+            intakem.move_velocity(-200);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             set_both(12000);
+            set_intakem(12000);
         } else {
             set_both(0);
+            set_intakem(0);
         }
 
         // delay to save resources
