@@ -8,9 +8,9 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor groups
-pros::MotorGroup leftMotors({-4, -3, -14},
+pros::MotorGroup leftMotors({-11, 12, -13},
                             pros::MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-pros::MotorGroup rightMotors({20, 15, 16}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+pros::MotorGroup rightMotors({-14, 15, 16}, pros::MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
 // Inertial Sensor on port 10
 pros::Imu imu(1);
@@ -82,15 +82,13 @@ lemlib::ExpoDriveCurve steerCurve(3, // joystick deadband out of 127
 lemlib::Chassis chassis(drivetrain, linearController, angularController, sensors, &throttleCurve, &steerCurve);
 
 pros::Motor intakeb(-19);
-pros::Motor intakem(17);
-pros::Motor intakef(-21);
+pros::Motor intakef(20);
 
 pros::ADIDigitalOut descore('B');
 pros::ADIDigitalOut matchload('A');
 
-
 pros::Distance distancer(9);
-pros::Distance distanceb(10); 
+pros::Distance distanceb(10);
 pros::Distance distancef(7);
 pros::Distance distancel(4);
 
@@ -106,8 +104,6 @@ void set_intakeb(int32_t voltage) { intakeb.move_voltage(voltage); }
 
 void set_intakef(int32_t voltage) { intakef.move_voltage(voltage); }
 
-void set_intakem(int32_t voltage) { intakem.move_voltage(voltage); }
-
 void toggle_matchload() {
     matchload_state = !matchload_state;
     matchload.set_value(matchload_state);
@@ -118,20 +114,18 @@ void toggle_descore() {
     descore.set_value(descore_state);
 }
 
-//DISTANCE CONTROL:
+// DISTANCE CONTROL:
 
-const double FIELD_WIDTH  = 144.0;
+const double FIELD_WIDTH = 144.0;
 const double FIELD_HEIGHT = 144.0;
 
-//to be edited
+// to be edited
 const double FRONT_OFFSET = 4.5;
-const double BACK_OFFSET  = 5.0;
-const double LEFT_OFFSET  = 6;
+const double BACK_OFFSET = 5.0;
+const double LEFT_OFFSET = 6;
 const double RIGHT_OFFSET = 6;
 
-double mmToIn(double mm) { 
-    return mm / 25.4; 
-}
+double mmToIn(double mm) { return mm / 25.4; }
 
 double safeRead(pros::Distance& sensor) {
     int raw = sensor.get();
@@ -149,8 +143,8 @@ double safeRead(pros::Distance& sensor) {
 
 void resetcoord(int quadrant, int angle) {
     double front = safeRead(distancef) + FRONT_OFFSET;
-    double back  = safeRead(distanceb) + BACK_OFFSET;
-    double left  = safeRead(distancel) + LEFT_OFFSET;
+    double back = safeRead(distanceb) + BACK_OFFSET;
+    double left = safeRead(distancel) + LEFT_OFFSET;
     double right = safeRead(distancer) + RIGHT_OFFSET;
 
     // Default to current pose if a reading is invalid
@@ -165,121 +159,97 @@ void resetcoord(int quadrant, int angle) {
     bool leftd = false;
     bool rightd = false;
 
-    switch (angle)
-    {
-    case 0:
-        blue = true;
-        break;
-    
-    case 90:
-        rightd = true;
-        break;
-    case 180:
-        red = true;
-        break;
-    case 270:
-        leftd = true;
-        break;
-    default:
-        break;
+    switch (angle) {
+        case 0: blue = true; break;
+
+        case 90: rightd = true; break;
+        case 180: red = true; break;
+        case 270: leftd = true; break;
+        default: break;
     }
 
     // QUAD 1
 
-    if (quadrant == 1){
-        if(red){
+    if (quadrant == 1) {
+        if (red) {
             xPos = (HALF_FIELD - left);
             yPos = (HALF_FIELD - back);
 
-        }
-        else if (blue){
+        } else if (blue) {
             xPos = (HALF_FIELD - right);
             yPos = (HALF_FIELD - front);
-        }
-        else if (rightd){
+        } else if (rightd) {
             xPos = (HALF_FIELD - front);
             yPos = (HALF_FIELD - left);
         }
 
-        else if (leftd){
+        else if (leftd) {
             xPos = (HALF_FIELD - back);
             yPos = (HALF_FIELD - right);
         }
-    
     }
 
     // QUAD 2
 
-    if (quadrant == 2){
-        if(red){
+    if (quadrant == 2) {
+        if (red) {
             xPos = (HALF_FIELD - right);
             yPos = (HALF_FIELD - back);
-        }
-        else if (blue){
+        } else if (blue) {
             xPos = -(HALF_FIELD - left);
             yPos = (HALF_FIELD - front);
-        }
-        else if (rightd){
+        } else if (rightd) {
             xPos = -(HALF_FIELD - back);
             yPos = (HALF_FIELD - left);
         }
 
-        else if (leftd){
+        else if (leftd) {
             xPos = -(HALF_FIELD - front);
             yPos = (HALF_FIELD - right);
         }
-    
     }
 
     // QUAD 3
 
-    if (quadrant == 3){
-        if(red){
+    if (quadrant == 3) {
+        if (red) {
             xPos = -(HALF_FIELD - right);
             yPos = -(HALF_FIELD - front);
-        }
-        else if (blue){
+        } else if (blue) {
             xPos = -(HALF_FIELD - left);
             yPos = -(HALF_FIELD - back);
-        }
-        else if (rightd){
+        } else if (rightd) {
             xPos = -(HALF_FIELD - back);
             yPos = -(HALF_FIELD - right);
         }
 
-        else if (leftd){
+        else if (leftd) {
             xPos = -(HALF_FIELD - front);
             yPos = -(HALF_FIELD - left);
         }
-    
     }
 
     // QUAD 4
 
-    if (quadrant == 4){
-        if(red){
+    if (quadrant == 4) {
+        if (red) {
             xPos = (HALF_FIELD - left);
             yPos = -(HALF_FIELD - front);
 
-        }
-        else if (blue){
+        } else if (blue) {
             xPos = (HALF_FIELD - right);
             yPos = -(HALF_FIELD - back);
-        }
-        else if (rightd){
+        } else if (rightd) {
             xPos = (HALF_FIELD - front);
             yPos = -(HALF_FIELD - right);
         }
 
-        else if (leftd){
+        else if (leftd) {
             xPos = (HALF_FIELD - back);
             yPos = -(HALF_FIELD - left);
         }
-    
     }
 
-
-    
     chassis.setPose(xPos, yPos, chassis.getPose().theta);
 }
 
@@ -346,47 +316,52 @@ void exit_condition(lemlib::Pose target, double exitDist) {
     chassis.cancelMotion();
 }
 
-void right_quals(){
+void right_quals() {
     chassis.setPose(0, 0, 0);
     resetcoord(4, 0);
-    //-15, -50
-    chassis.moveToPose(19.5, -32, 33.0, 1300, {.lead = 0.13, .maxSpeed = 100, .minSpeed = 80});
+    toggle_descore();
+
+    chassis.moveToPoint(20, -34, 1000, {.minSpeed = 30, .earlyExitRange = 3});
     set_intakef(12000);
-    chassis.waitUntil(14);
-    toggle_matchload();
-    exit_condition({22.5, -32, -33}, 3);
 
-
-    chassis.moveToPose(39.5, -56, 180, 1400, {.lead = .3, .maxSpeed = 110, .minSpeed = 60});
-    exit_condition({40.5, -56, 130}, 1);
-    chassis.moveToPose(38, -80, 180.0, 1350, {.lead = 0.1, .maxSpeed = 50, .minSpeed = 50});
-    chassis.waitUntilDone();
-    chassis.turnToHeading(180, 1000, {.maxSpeed = 60, .minSpeed = 60, .earlyExitRange = 1});
+    chassis.moveToPoint(38, -21, 2000, {.maxSpeed = 70, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.waitUntil(21);
+    chassis.turnToHeading(80, 500, {.minSpeed = 10, .earlyExitRange = 5});
+    chassis.moveToPoint(21, -41, 1000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.turnToHeading(125, 1000, {.minSpeed = 10, .earlyExitRange = 5});
+    chassis.moveToPoint(42, -48, 1000, {.minSpeed = 10, .earlyExitRange = 1});
+    set_intakef(0);
+    chassis.turnToHeading(180, 1000);
     chassis.waitUntilDone();
     resetcoord(4, 180);
     pros::delay(50);
-    chassis.moveToPose(46.8, -26, 180.0, 1800, {.forwards = false, .lead = 0.1,  .maxSpeed = 80, .minSpeed = 60});
-    chassis.waitUntil(18);
-    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
+    chassis.moveToPoint(48, -31.5, 1000, {.forwards = false});
+    chassis.waitUntil(15);
     set_both(12000);
-    pros::delay(1800);
-    chassis.waitUntilDone();
-    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-
-    chassis.moveToPose(chassis.getPose().x - 10.5, chassis.getPose().y - 10, 220, 1000, {.lead = .1, .maxSpeed = 120, .minSpeed = 30, .earlyExitRange = 2});
-   toggle_matchload();
-    chassis.moveToPose(43.7, -27, 180, 2000, {.forwards = false, .maxSpeed = 90, .minSpeed = 80, .earlyExitRange = 1});
-    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
-    chassis.waitUntilDone();
-    chassis.turnToHeading(-230, 1500, {.maxSpeed = 20});
-    chassis.waitUntil(30);      
+    pros::delay(1300);
     toggle_matchload();
+
+    chassis.moveToPoint(48, -63, 1850, {.maxSpeed = 45});
+    set_intakeb(0);
+    chassis.moveToPoint(48, -50, 1000, {.forwards = false});
+    toggle_matchload();
+    chassis.turnToHeading(315, 1000);
+    chassis.moveToPoint(21, -21.5, 2000, {.maxSpeed = 80});
+    intakeb.move_absolute((intakeb.get_position() + 250), 12000);
+    chassis.waitUntil(22);
+    set_both(-12000);
+    pros::delay(1200);
+    set_both(-10000);
+    pros::delay(1400);
+    chassis.moveToPoint(34, -31, 1000, {.forwards = false, .maxSpeed = 90});
+    chassis.swingToHeading(180, lemlib::DriveSide::RIGHT, 1000, {.minSpeed = 30, .earlyExitRange = 5});
+    chassis.waitUntil(50);
+    toggle_descore();
     chassis.waitUntilDone();
-    chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 }
 
 void solo_awp_right() {
-    chassis.setPose(0,0,90);
+    chassis.setPose(0, 0, 90);
     resetcoord(4, 90);
     pros::delay(50);
 
@@ -394,7 +369,7 @@ void solo_awp_right() {
 
     chassis.turnToHeading(180, 1000, {.minSpeed = 1, .earlyExitRange = 10});
     toggle_matchload();
-    //toggle amtchlod
+    // toggle amtchlod
 
     chassis.moveToPoint(41.5, -62, 1100, {.maxSpeed = 50, .minSpeed = 20});
     set_intakef(12000);
@@ -402,7 +377,7 @@ void solo_awp_right() {
     chassis.moveToPoint(41.5, -27, 1800, {.forwards = false, .maxSpeed = 90});
     chassis.waitUntil(22);
     set_intakeb(12000);
-    //score
+    // score
     pros::delay(400);
 
     chassis.moveToPose(42, -37, 180, 1000, {.maxSpeed = 70, .minSpeed = 30});
@@ -432,7 +407,7 @@ void solo_awp_right() {
     chassis.waitUntil(10);
     set_intakef(0);
 
-    chassis.moveToPose(9, -11 , 225, 2000, {.forwards = false, .maxSpeed = 100, .minSpeed = 70});
+    chassis.moveToPose(9, -11, 225, 2000, {.forwards = false, .maxSpeed = 100, .minSpeed = 70});
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.waitUntil(15);
     set_both(-12000);
@@ -442,7 +417,7 @@ void solo_awp_right() {
     pros::delay(900);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 
-    chassis.moveToPoint(-26, -46, 2000, {.minSpeed = 30 , .earlyExitRange = 2});
+    chassis.moveToPoint(-26, -46, 2000, {.minSpeed = 30, .earlyExitRange = 2});
     chassis.turnToHeading(180, 600);
     chassis.waitUntilDone();
     resetcoord(3, 180);
@@ -478,14 +453,9 @@ void ball7_left() {
     //                    {.lead = .1, .maxSpeed = 80, .minSpeed = 1, .earlyExitRange = 2});
     // toggle_matchload();
     // toggle_descore();
-    // chassis.moveToPose(-42, -37, 180, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 40, .earlyExitRange = 2});
-    // chassis.waitUntil(3);
-    // toggle_descore();
-    // chassis.waitUntilDone();
-    // chassis.turnToHeading(-230, 1000, {.maxSpeed = 20});
-    // chassis.waitUntil(30);
-    // toggle_matchload();
-    // chassis.waitUntilDone();
+    // chassis.moveToPose(-42, -37, 180, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 40, .earlyExitRange =
+    // 2}); chassis.waitUntil(3); toggle_descore(); chassis.waitUntilDone(); chassis.turnToHeading(-230, 1000,
+    // {.maxSpeed = 20}); chassis.waitUntil(30); toggle_matchload(); chassis.waitUntilDone();
     // chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 }
 
@@ -529,38 +499,38 @@ void ball7_wing_right() {
     chassis.turnToHeading(145, 1000);
 }
 
-void ball7_right()  {
+void ball7_right() {
     resetcoord(4, 0);
     //-15, -50
     chassis.moveToPose(19.5, -32, 33.0, 1300, {.lead = 0.13, .maxSpeed = 100, .minSpeed = 80});
     set_intakef(12000);
     chassis.waitUntil(14);
     toggle_matchload();
-    exit_condition( {22.5, -32, -33}, 3);
-
+    exit_condition({22.5, -32, -33}, 3);
 
     chassis.moveToPose(39.5, -56, 180, 1400, {.lead = .3, .maxSpeed = 110, .minSpeed = 60});
-    exit_condition( {40.5, -56, 130}, 1);
+    exit_condition({40.5, -56, 130}, 1);
     chassis.moveToPose(38, -80, 180.0, 1350, {.lead = 0.1, .maxSpeed = 50, .minSpeed = 50});
     chassis.waitUntilDone();
     chassis.turnToHeading(180, 1000, {.maxSpeed = 60, .minSpeed = 60, .earlyExitRange = 1});
     chassis.waitUntilDone();
     resetcoord(4, 180);
     pros::delay(50);
-    chassis.moveToPose(46.8, -26, 180.0, 1800, {.forwards = false, .lead = 0.1,  .maxSpeed = 80, .minSpeed = 60});
+    chassis.moveToPose(46.8, -26, 180.0, 1800, {.forwards = false, .lead = 0.1, .maxSpeed = 80, .minSpeed = 60});
     chassis.waitUntil(18);
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
     set_both(12000);
     pros::delay(1800);
     chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-    chassis.moveToPose(chassis.getPose().x - 10.5, chassis.getPose().y - 10, 220, 1000, {.lead = .1, .maxSpeed = 120, .minSpeed = 30, .earlyExitRange = 2});
+    chassis.moveToPose(chassis.getPose().x - 10.5, chassis.getPose().y - 10, 220, 1000,
+                       {.lead = .1, .maxSpeed = 120, .minSpeed = 30, .earlyExitRange = 2});
     toggle_matchload();
     chassis.moveToPose(43.7, -22, 180, 2000, {.forwards = false, .maxSpeed = 90, .minSpeed = 80, .earlyExitRange = 1});
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
     chassis.waitUntilDone();
     chassis.turnToHeading(-230, 1500, {.maxSpeed = 20});
-    chassis.waitUntil(30);      
+    chassis.waitUntil(30);
     toggle_matchload();
     chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
@@ -608,16 +578,14 @@ void left_quals() {
     // chassis.moveToPose(chassis.getPose().x - 10, chassis.getPose().y - 15, 200, 1000,
     //                    {.lead = .2, .maxSpeed = 80, .minSpeed = 1, .earlyExitRange = 2});
     // robot.toggle_matchload();
-    // chassis.moveToPose(-51, -23, 180, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 40, .earlyExitRange = 2});
-    // chassis.waitUntilDone();
-    // chassis.turnToHeading(-230, 1000, {.maxSpeed = 20});
-    // chassis.waitUntil(30);
+    // chassis.moveToPose(-51, -23, 180, 1500, {.forwards = false, .maxSpeed = 60, .minSpeed = 40, .earlyExitRange =
+    // 2}); chassis.waitUntilDone(); chassis.turnToHeading(-230, 1000, {.maxSpeed = 20}); chassis.waitUntil(30);
     // robot.toggle_matchload();
     // chassis.waitUntilDone();
     // chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 }
 
-void ball4_left(){
+void ball4_left() {
     chassis.setPose(0, 0, 0);
     resetcoord(3, 0);
     pros::delay(50);
@@ -627,28 +595,25 @@ void ball4_left(){
     toggle_matchload();
     exit_condition({-23, -31, -33}, 3);
 
-    chassis.moveToPose(-39.5, -59, 176, 1500, {.lead = .3, .maxSpeed = 110, .minSpeed = 60});
+    chassis.moveToPose(-39.5, -59, 180, 1500, {.lead = .3, .maxSpeed = 110, .minSpeed = 60});
     exit_condition({-40.5, -59, -130}, 1);
-    chassis.moveToPose(-41.5, -38, 180.0, 1150, {.forwards = false, .lead = 0.1,  .maxSpeed = 70, .minSpeed = 50});
+    chassis.moveToPose(-38.5, -35, 180.0, 1150, {.forwards = false, .lead = 0.1, .maxSpeed = 70, .minSpeed = 50});
     chassis.waitUntil(9);
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
-    set_both(12000);
-
-    // -------------------------
-    pros::delay(1500);
+    set_both(12000), pros::delay(900);
     chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-    chassis.moveToPose(chassis.getPose().x - 10, chassis.getPose().y - 11.5, 200, 1000, {.lead = .1, .maxSpeed = 100, .minSpeed = 1, .earlyExitRange = 2});
+    chassis.moveToPose(chassis.getPose().x - 10, chassis.getPose().y - 11.5, 200, 1000,
+                       {.lead = .1, .maxSpeed = 100, .minSpeed = 1, .earlyExitRange = 2});
     toggle_matchload();
-    chassis.moveToPose(-42, -33, 180, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 50, .earlyExitRange = 2});
+    chassis.moveToPose(-42, -30, 180, 2000, {.forwards = false, .maxSpeed = 70, .minSpeed = 50, .earlyExitRange = 2});
     chassis.waitUntilDone();
     chassis.turnToHeading(-230, 1000, {.maxSpeed = 20});
     chassis.waitUntil(30);
     toggle_matchload();
-    chassis.waitUntilDone();             
+    chassis.waitUntilDone();
     chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 }
-
 
 void skills_auto() {
     chassis.setPose(0, 0, 0);
@@ -700,11 +665,11 @@ void skills_auto() {
     toggle_matchload();
     set_intakeb(0);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-43.5, 5, 1500, {.forwards = false, .maxSpeed = 80});
+    chassis.moveToPoint(-43.5, 5, 2000, {.forwards = false, .maxSpeed = 100});
     chassis.waitUntil(21);
     set_both(12000);
     toggle_matchload();
-    pros::delay(1500);
+    pros::delay(1000);
     set_intakeb(12000);
     pros::delay(500);
     chassis.moveToPose(-43.5, 22, 0, 1000, {.maxSpeed = 100});
@@ -731,11 +696,11 @@ void skills_auto() {
     pros::delay(50);
     // 26, 60
     chassis.moveToPoint(21.5, 37.5, 1000);
-    chassis.moveToPoint(21, 25.5, 1000);
+    chassis.moveToPoint(21, 23.5, 1000);
     chassis.waitUntil(6);
     set_intakef(0);
     chassis.turnToHeading(45, 1000);
-    chassis.moveToPose(7, 16, 45, 1500,  {.forwards = false, .maxSpeed = 75, .minSpeed = 50});
+    chassis.moveToPose(7, 13.5, 45, 1500, {.forwards = false, .maxSpeed = 75, .minSpeed = 50});
     chassis.waitUntil(10);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_BRAKE);
     set_both(-12000);
@@ -759,15 +724,14 @@ void skills_auto() {
     toggle_matchload();
     chassis.turnToHeading(0, 1000, {.minSpeed = 30, .earlyExitRange = 5});
     set_both(0);
-    chassis.moveToPoint(51.5, -20, 4000, {.forwards = false, .maxSpeed = 90, .minSpeed = 30, .earlyExitRange =1 });
+    chassis.moveToPoint(51.5, -20, 4000, {.forwards = false, .maxSpeed = 90, .minSpeed = 30, .earlyExitRange = 1});
     chassis.turnToHeading(90, 1500);
     chassis.waitUntilDone();
     pros::delay(50);
     resetcoord(4, 90);
     pros::delay(50);
 
-
-    chassis.moveToPoint(50.5, -36, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
+    chassis.moveToPoint(51, -36, 1000, {.forwards = false, .maxSpeed = 100, .minSpeed = 20, .earlyExitRange = 1});
     chassis.turnToHeading(180, 1000, {.minSpeed = 10, .earlyExitRange = 2});
     chassis.moveToPoint(50.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
     chassis.waitUntil(4);
@@ -777,49 +741,49 @@ void skills_auto() {
     pros::delay(50);
     toggle_matchload();
     set_intakeb(0);
-    chassis.moveToPoint(50.5, -57, 3000, {.maxSpeed = 55});
+    chassis.moveToPoint(51, -57, 3000, {.maxSpeed = 55});
     chassis.waitUntilDone();
-    chassis.moveToPoint(50.5, -22, 2000, {.forwards = false, .maxSpeed = 70});
+    chassis.moveToPoint(51, -22, 2000, {.forwards = false, .maxSpeed = 70});
     chassis.waitUntil(20);
     set_both(12000);
     pros::delay(2800);
     toggle_matchload();
-    chassis.moveToPose(50.5,-40, 180, 1000, {.maxSpeed = 70});
+    chassis.moveToPose(51, -40, 180, 1000, {.maxSpeed = 70});
     chassis.waitUntilDone();
     resetcoord(4, 180);
     chassis.moveToPose(22, -60, 270, 2000, {.lead = 0.3, .maxSpeed = 120});
-    chassis.waitUntilDone();   
+    chassis.waitUntilDone();
     toggle_matchload();
     pros::delay(30);
-    chassis.moveToPose(0, -60, 270, 6000, {.maxSpeed = 100, .minSpeed = 100});
+    chassis.moveToPose(-2, -60, 270, 6000, {.maxSpeed = 100, .minSpeed = 100});
     chassis.waitUntil(13);
     toggle_matchload();
 }
-void inch(){
-    chassis.setPose(0,0, 0);
+
+void inch() {
+    chassis.setPose(0, 0, 0);
     chassis.moveToPose(0, 5, 0, 1000);
 }
 
 void autonomous() {
-    // only use code above the line
-    // ball4_left(); // This works
+    // ball4_left();
+    // solo_awp_right();
     // right_quals();
-    //----------------------------
-    // solo_awp_right(); // donnot need tuning for drc DONT TOUCH THIS
+
     // left_quals(); // this works
     // ball7_left();
-
     // solo_awp_right();
-    // ball7_right(); // needs tuning
+    // ball7_right();
     // inch();
     // moveForward();
     // left_quals();
-    // skills_auto();
+    // ball7_wing_left();
+    skills_auto();
 }
 
 /**
-    * Runs in driver control
-    */
+ * Runs in driver control
+ */
 
 void opcontrol() {
     // controller
@@ -830,29 +794,24 @@ void opcontrol() {
         int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
         // move the chassis with curvature drive
-        chassis.arcade(leftY, 0.9*rightX);
+        chassis.arcade(leftY, 0.9 * rightX);
 
         // buttons for controller
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) { toggle_descore(); }
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) { toggle_descore(); }
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { toggle_matchload(); }
 
         // Control Intake using shoulder buttons (L1/L2)
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
             set_intakef(12000);
-            set_intakeb(12000);
-            set_intakem(12000);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             intakef.move_velocity(-200);
             intakeb.move_velocity(-200);
-            intakem.move_velocity(-200);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
             set_both(12000);
-            set_intakem(12000);
         } else {
             set_both(0);
-            set_intakem(0);
         }
 
         // delay to save resources
